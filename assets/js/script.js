@@ -1,7 +1,6 @@
 const now = parseInt(moment().format("HH"));
 const date = moment().format("dddd, MMMM Do");
 
-let schedule = [];
 const getSchedule = () => {
   const newSchedule = [];
   $("textarea").each(function (i) {
@@ -11,6 +10,19 @@ const getSchedule = () => {
       hour: hour,
       note: note,
     });
+  });
+  schedule = [...newSchedule];
+};
+
+const saveSchedule = () => {
+  console.log("it ran");
+  getSchedule();
+  localStorage.setItem("workSchedule", JSON.stringify(schedule));
+};
+
+const setSchedule = () => {
+  schedule.forEach((block) => {
+    $(`#${block.hour}`).val(block.note);
   });
 };
 
@@ -25,3 +37,11 @@ $("textarea").each(function (i) {
     $(this).addClass("present");
   }
 });
+
+$(".saveBtn").on("click", saveSchedule);
+
+let schedule = localStorage.getItem("workSchedule") || [];
+if (schedule.length > 0) {
+  schedule = JSON.parse(schedule);
+  setSchedule();
+}
